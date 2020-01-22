@@ -1,7 +1,7 @@
 let count = 4 
 
 class Intern {
-    constructor (name, id, email, school) {
+    constructor (name, email, school) {
         this.name = name
         this.id = count++
         this.email = email

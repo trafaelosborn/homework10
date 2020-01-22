@@ -1,4 +1,20 @@
-let generatedEmployeeHTML = (array) => {
+let generatedInternHTML = (internArray) => {
+  
+    return `
+
+        <div>
+            name: ${ internArray[0].name }
+            email: ${internArray[0].email}
+
+            name: ${ internArray[1].name }
+            email: ${internArray[1].email}
+
+            
+        </div>
+    `
+}
+
+let generatedManagerHTML = (array) => {
   
     return `
     
@@ -23,4 +39,4 @@ let generatedEmployeeHTML = (array) => {
     `
 }
 
-module.exports = generatedEmployeeHTML
+module.exports = { generatedInternHTML, generatedManagerHTML }

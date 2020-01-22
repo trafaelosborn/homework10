@@ -1,7 +1,7 @@
 const inquirer = require("inquirer")
 const fs = require("fs")
 const Employee = require("./lib/Employee")
-const generatedEmployeeHTML=require("./template/employee")
+const {generatedInternHTML, generatedManagerHTML }=require("./template/employee")
 const Engineer = require("./lib/Engineer")
 const Intern = require("./lib/Intern")
 const Manager = require("./lib/Manager")
@@ -31,7 +31,7 @@ const askquestion = () => {
     }
   ]).then((userInput) => {
        
-      let manager = new Manager(userInput.ManagerName, userInput.ManagerEmail, userInput.ManagerEmail)
+      let manager = new Manager(userInput.ManagerName, userInput.ManagerEmail, userInput.ManagerOffice)
 
       managerArray.push(manager)
       console.log(manager)
@@ -80,7 +80,7 @@ const askIntern = () => {
     {
       type : "input",
       message : "What is your intern's email?",
-      name : "EngineerEmail"
+      name : "InternEmail"
     },
     {
       type : "input",
@@ -106,10 +106,24 @@ askquestion()
 
 
 let makeHTML = ()=>{
+    var internHTML = generatedInternHTML(internArray);
 
+    const pageHTML =  `
+    
+    <html>
+    <head>
+    
+    </head>
+
+       <body>
+        ${internHTML}
+
+       </body>
+    </html>
+    `
     var dataStr= generatedEmployeeHTML(managerArray, engineerArray, internArray)
 
-    fs.writeFileSync("./employeeOut.html",dataStr,(err)=> {
+    fs.writeFileSync("./employeeOut.html",pageHTML,(err)=> {
       
       if(err){
         console.log(err)

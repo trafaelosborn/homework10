@@ -1,7 +1,7 @@
 let count = 3 
 
 class Manager {
-    constructor (name, id, email, officeNumber) {
+    constructor (name, email, officeNumber) {
         this.name = name
         this.id = count++
         this.email = email

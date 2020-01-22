@@ -1,7 +1,7 @@
 count = 1
 
 class Engineer {
-    constructor (name, id, email, github) {
+    constructor (name, email, github) {
         this.name = name
         this.id = count++
         this.email = email
