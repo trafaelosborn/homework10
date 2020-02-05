@@ -1,16 +1,15 @@
 const inquirer = require("inquirer")
 const fs = require("fs")
 const Employee = require("./lib/Employee")
-const {generatedInternHTML, generatedManagerHTML }=require("./template/employee")
+const {generatedInternHTML, generatedManagerHTML }=require("./template/templategenerator")
 const Engineer = require("./lib/Engineer")
 const Intern = require("./lib/Intern")
 const Manager = require("./lib/Manager")
 
 
-let employeeArray = []
-const managerArray = [];
-const engineerArray = [];
-const internArray = [];
+const employeeArray = []
+let manager = {};
+
 
 const askquestion = () => {
   inquirer.prompt([
@@ -31,15 +30,41 @@ const askquestion = () => {
     }
   ]).then((userInput) => {
        
-      let manager = new Manager(userInput.ManagerName, userInput.ManagerEmail, userInput.ManagerOffice)
+      manager = new Manager(userInput.ManagerName, userInput.ManagerEmail, userInput.ManagerOffice)
 
-      managerArray.push(manager)
       console.log(manager)
   })  
   .then(function() {
-    askEngineer()
+    addEmployee()
   });
   
+const addEmployee = () => {
+  inquirer.prompt([
+  {
+    type : "confirm",
+    message : "Would you like to add an employee?",
+    name : "confirmAdd"
+  }
+ 
+  
+]).then(userInput  => {
+  userInput.confirmAdd ? whichEmployee() : makeHTML()
+})
+}
+
+whichEmployee = () => {
+  inquirer.prompt (
+    {
+      type : "list",
+      choices : ["Engineer", "Intern"],
+      message: "What kind of employee would you like to add?",
+      name: "employeeType"
+    }
+      ).then(userInput => {
+        userInput.employeeType === "Engineer" ? askEngineer() : askIntern()
+      }       
+        )         
+}
 
 const askEngineer = () => {
   inquirer.prompt([
@@ -57,16 +82,17 @@ const askEngineer = () => {
       type : "input",
       message : "What is your engineer's GitHub?",
       name : "EngineerGithub"
-    }
+    },
+    
   ]).then((userInput) => {
        
       let engineer = new Engineer(userInput.EngineerName, userInput.EngineerEmail, userInput.EngineerGithub)
 
-      engineerArray.push(engineer)
-      console.log(engineerArray)    
+      employeeArray.push(engineer)
+        
   })  
   .then(function() {
-    askIntern()
+    addEmployee()
   });
 }
 
@@ -90,11 +116,11 @@ const askIntern = () => {
   ]).then((userInput) => {
        
       let intern = new Intern(userInput.InternName, userInput.InternEmail, userInput.InternSchool)
-      internArray.push(intern)
-      console.log(internArray)    
+      employeeArray.push(intern)
+      console.log(employeeArray)    
   })  
   .then(function(){
-    makeHTML()
+    addEmployee()
   })
 }
 
@@ -106,22 +132,8 @@ askquestion()
 
 
 let makeHTML = ()=>{
-    var internHTML = generatedInternHTML(internArray);
-
-    const pageHTML =  `
     
-    <html>
-    <head>
-    
-    </head>
-
-       <body>
-        ${internHTML}
-
-       </body>
-    </html>
-    `
-    var dataStr= generatedEmployeeHTML(managerArray, engineerArray, internArray)
+    var pageHTML= generatedManagerHTML(manager, employeeArray)
 
     fs.writeFileSync("./employeeOut.html",pageHTML,(err)=> {
       
